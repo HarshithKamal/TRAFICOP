@@ -8,6 +8,21 @@ This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 r
 
 ---
 
+## Key Features
+
+- AI-powered incident resolution time prediction using XGBoost
+- Traffic Impact Score calculation
+- Risk classification (Low / Medium / High / Critical)
+- Traffic Resilience Index (TRI) for corridor analysis
+- Resource recommendation engine
+- Diversion route suggestions
+- Interactive Bengaluru Command Map
+- SHAP-based explainable AI
+- Incident Simulator for operational planning
+- Mappls (MapmyIndia) integration with OpenStreetMap fallback
+
+---
+
 ## What's in this repo
 
 | Folder | Contents |
@@ -129,10 +144,24 @@ Three things I want to be able to explain confidently to judges, because I built
 
 ---
 
+## How TRAFICOP Works
+
+1. A traffic incident is reported or simulated.
+2. The incident details are processed and enriched using historical corridor intelligence.
+3. The XGBoost model predicts the expected resolution time.
+4. The Impact Score Engine calculates how severely the incident may affect traffic operations.
+5. The Risk Engine classifies the incident as Low, Medium, High, or Critical.
+6. The Recommendation Engine suggests officers, barricades, tow vehicles, and escalation actions.
+7. The Diversion Engine recommends alternative routes around affected corridors.
+8. The incident is visualized on the Bengaluru Command Map.
+9. Decision-makers can monitor KPIs, corridor resilience, hotspot trends, and recommendations from a single dashboard.
+
+The goal is to provide traffic operators with a unified AI-assisted decision support platform for faster response and better resource allocation.
+
 ## Tech stack
 
 - **Modeling:** XGBoost (resolution time regression), SHAP (explainability)
-- **Map:** **Mappls (MapmyIndia) live tiles + routing API** when configured, with automatic fallback to Folium + OpenStreetMap when not — see "Mappls integration" below
+- **Map:** Mappls (MapmyIndia) integration with automatic OpenStreetMap fallback
 - **Dashboard:** Streamlit, Plotly, Matplotlib
 - **Data:** pandas, numpy, scikit-learn (label encoding)
 - **Training environment:** Google Colab + Google Drive
@@ -177,23 +206,26 @@ If no key is configured, the dashboard continues to operate normally using OpenS
 
 ---
 
-## Deploying it
+## Deployment
 
-I'm hosting this on **Streamlit Cloud** — it's purpose-built for exactly this kind of app and the GitHub-native deploy flow is the fastest way to go from "code on my laptop" to "URL I can hand judges."
+TRAFICOP is deployed on Streamlit Cloud and can be accessed through the live application URL: https://traficop.streamlit.app/
 
-1. Go to **share.streamlit.io**, sign in with **Continue with GitHub**, and authorize it. Free tier, no card needed.
-2. Click **Create app** → **Deploy a public app from GitHub**.
-3. Fill in:
-   - **Repository:** your `traficop` repo
-   - **Branch:** `main`
-   - **Main file path:** `app/app.py` — this matters, since `app.py` lives inside the `app/` subfolder, not the repo root
-4. Under **Advanced settings**, set the Python version to 3.11 or 3.12 to match what I tested with.
-5. Click **Deploy**. It clones the repo, installs everything in `app/requirements.txt`, and launches — takes 2-5 minutes the first time, with a live build log to watch.
-6. You'll get a public URL like `https://your-app-name.streamlit.app` — that's what I submit and demo from.
+The deployed application includes:
 
-**Adding Mappls secrets after deploy:** open your app's dashboard on share.streamlit.io, click the **⋮** menu → **Settings → Secrets**, paste in your credentials (same TOML format as above), and save. Streamlit Cloud restarts the app automatically with the secrets injected — `app/utils/mappls_client.py` reads them via `st.secrets`, so there's nothing else to touch.
+* Executive KPI Dashboard
+* Bengaluru Command Map
+* Traffic Resilience Index (TRI) Dashboard
+* Analytics Dashboard
+* SHAP Explainability
+* Incident Simulator
+* Resource Recommendation Engine
 
-**Before judging, I always do a quick pass on the live URL:** open all 7 sidebar pages and confirm none of them throw a red error box, then specifically test the Incident Simulator (run an analysis) and the Command Map (confirm it renders and markers are clickable) — those two are the most likely to surface a missed dependency. If anything throws `ModuleNotFoundError`, it means a package is missing from `app/requirements.txt`. If anything throws `FileNotFoundError` for a model or data file, it almost always means the Main file path wasn't set to `app/app.py`.
+The application automatically loads the trained XGBoost model, processed dataset, and corridor intelligence data required for inference.
+
+If a valid Mappls REST API Key is configured, the dashboard uses live Mappls map services. Otherwise, it automatically falls back to OpenStreetMap while maintaining full functionality.
+
+No additional setup is required for end users accessing the deployed application.
+
 
 ---
 
