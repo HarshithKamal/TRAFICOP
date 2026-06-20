@@ -132,7 +132,7 @@ I made this session-only on purpose — nothing gets written to disk or to the o
 
 ---
 
-## A note on data honesty (read this before your demo)
+## A note on data honesty
 
 Three things I want to be able to explain confidently to judges, because I built this without hiding any of it:
 
@@ -158,6 +158,8 @@ Three things I want to be able to explain confidently to judges, because I built
 
 The goal is to provide traffic operators with a unified AI-assisted decision support platform for faster response and better resource allocation.
 
+---
+
 ## Tech stack
 
 - **Modeling:** XGBoost (resolution time regression), SHAP (explainability)
@@ -165,6 +167,8 @@ The goal is to provide traffic operators with a unified AI-assisted decision sup
 - **Dashboard:** Streamlit, Plotly, Matplotlib
 - **Data:** pandas, numpy, scikit-learn (label encoding)
 - **Training environment:** Google Colab + Google Drive
+
+---
 
 ## Mappls Integration (Live, Auto-Detected)
 
@@ -175,6 +179,8 @@ TRAFICOP ships with a real Mappls client (`app/utils/mappls_client.py`) that:
 * Supports route intelligence and diversion planning using Mappls mapping services.
 * Enhances the traffic command center experience with real Indian mapping infrastructure.
 * Falls back automatically and silently to OpenStreetMap if no Mappls key is configured or if a service is temporarily unavailable. The application never crashes because of map connectivity issues.
+
+---
 
 ### Automatic Detection
 
@@ -195,6 +201,8 @@ The sidebar status changes to:
 indicating that the application is successfully using Mappls services.
 
 If no key is configured, the dashboard continues to operate normally using OpenStreetMap as a fallback.
+
+---
 
 ### Benefits
 
