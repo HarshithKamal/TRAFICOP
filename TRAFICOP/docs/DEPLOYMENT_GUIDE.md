@@ -1,6 +1,6 @@
 # Deployment Guide
 
-Three deployment options, in order of recommendation for this project. **Streamlit Cloud (Option A) is the easiest and fastest — use it unless you have a specific reason not to.**
+Three deployment options, in order of recommendation for this project. **Streamlit Cloud (I have choosen) is the easiest and fastest — use it unless you have a specific reason not to.**
 
 ---
 
