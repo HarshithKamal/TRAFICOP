@@ -137,25 +137,43 @@ Three things I want to be able to explain confidently to judges, because I built
 - **Data:** pandas, numpy, scikit-learn (label encoding)
 - **Training environment:** Google Colab + Google Drive
 
-### Mappls integration (live, auto-detected)
+## Mappls Integration (Live, Auto-Detected)
 
 TRAFICOP ships with a real Mappls client (`app/utils/mappls_client.py`) that:
 
-- Generates and caches an OAuth2 bearer token from `MAPPLS_CLIENT_ID` + `MAPPLS_CLIENT_SECRET`, **or** uses a simpler `MAPPLS_REST_KEY` if that's what your console issued
-- Swaps the Command Map's tiles to live Mappls map tiles the moment credentials are present
-- Calls Mappls' live Distance/ETA API to rank diversion routes by real driving time in the Incident Simulator
-- **Falls back automatically and silently** to OpenStreetMap tiles and static corridor-based diversion logic if no credentials are set, or if a live API call fails for any reason (expired trial credits, network issue, etc.) — the app never crashes or shows a broken page because of this
+* Uses a **Mappls REST API Key** for authentication.
+* Automatically switches the Bengaluru Command Map from OpenStreetMap to live Mappls map tiles when a valid key is detected.
+* Supports route intelligence and diversion planning using Mappls mapping services.
+* Enhances the traffic command center experience with real Indian mapping infrastructure.
+* Falls back automatically and silently to OpenStreetMap if no Mappls key is configured or if a service is temporarily unavailable. The application never crashes because of map connectivity issues.
 
-**Getting credentials, if you want the live version:**
-1. Go to the Mappls API Console (`outpost.mappls.com/console`), sign up with your email, verify it, and create a new project. Approval for the free developer tier is basically instant — no business KYC, no card needed.
-2. Inside the project's Credentials tab you'll find either a `Client ID` + `Client Secret` pair (OAuth2) or a `REST API Key` (simpler, static). Either works — the code accepts whichever one you have.
-3. **Local testing:** copy `app/.streamlit/secrets.toml.example` to `app/.streamlit/secrets.toml`, fill in whichever credential set you got, restart the app.
-4. **Streamlit Cloud:** paste the same key=value lines into your app's Settings → Secrets box (TOML format, e.g. `MAPPLS_REST_KEY = "your_key_here"`).
-5. Reload the dashboard — the sidebar shows **"🟢 Mappls live map: Connected"** and the map/diversion engine switches over automatically. No code changes needed anywhere.
+### Automatic Detection
 
-If the sidebar instead shows a "configured but unreachable" warning, double-check the key was pasted without extra whitespace, and that your account's free credits haven't run out.
+When a valid Mappls REST API Key is configured in:
 
-The APIs that actually matter for TRAFICOP: the **Routing API** (the diversion engine's main call — primary + alternate routes between two points), and optionally the **Traffic API** if your plan includes a live overlay layer. Pricing and exact monthly free-tier limits change over time on Mappls' end, so I'd rather you check the console directly than trust a number I write here that could go stale.
+```toml
+MAPPLS_REST_KEY = "YOUR_REST_API_KEY"
+```
+
+the dashboard automatically detects it and activates live Mappls functionality.
+
+The sidebar status changes to:
+
+```text
+🟢 Mappls live map: Connected
+```
+
+indicating that the application is successfully using Mappls services.
+
+If no key is configured, the dashboard continues to operate normally using OpenStreetMap as a fallback.
+
+### Benefits
+
+* Real Bengaluru map visualization
+* Interactive incident monitoring
+* Congestion hotspot analysis
+* Corridor-level traffic intelligence
+* Enhanced command-center experience for traffic operations
 
 ---
 
