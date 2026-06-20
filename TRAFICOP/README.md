@@ -6,8 +6,6 @@ Built for **Flipkart Gridlock 2.0 — Round 2** | Theme: *Event-Driven Congestio
 
 This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 real Bengaluru traffic incidents) and built it into a working Traffic Command Center — it predicts how long an incident will take to resolve, scores how much impact it'll have on the corridor, classifies its risk level, recommends how many officers/barricades/tow vehicles to send, suggests diversion routes around it, and explains every single prediction with SHAP so it's not a black box. Everything runs on an interactive map of Bengaluru.
 
-I've documented this README the same way I'd want it explained to me — step by step, nothing assumed.
-
 ---
 
 ## What's in this repo
