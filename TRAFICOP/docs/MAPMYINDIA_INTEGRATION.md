@@ -146,6 +146,5 @@ def get_diversion_routes(corridor):
 
 `get_diversion_routes_live()` in `core.py` calls this static table to get the *candidate* corridors, then — only if Mappls credentials are configured — calls the live Distance API to rank those candidates by real driving ETA. If the live call fails for any reason (no credits, network blip, invalid key), it silently returns the static order instead. **The map, the diversion engine, and the sidebar status indicator all auto-detect credential presence at runtime** — there is no manual toggle or separate "demo mode" to switch.
 
-### Recommended story for judges
 
 *"TRAFICOP's map and diversion engine run on live Mappls APIs as the primary path, with the same corridor logic acting as an automatic, zero-downtime fallback if a live call fails. We built it this way because real traffic-command software can't go dark because a third-party API hiccupped during a live incident."* This is true today, in the code, not aspirational.
