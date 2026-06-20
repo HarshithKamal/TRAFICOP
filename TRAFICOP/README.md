@@ -146,8 +146,6 @@ TRAFICOP ships with a real Mappls client (`app/utils/mappls_client.py`) that:
 - Calls Mappls' live Distance/ETA API to rank diversion routes by real driving time in the Incident Simulator
 - **Falls back automatically and silently** to OpenStreetMap tiles and static corridor-based diversion logic if no credentials are set, or if a live API call fails for any reason (expired trial credits, network issue, etc.) — the app never crashes or shows a broken page because of this
 
-**No credentials needed to demo it today.** The app runs perfectly on the fallback path right out of the box.
-
 **Getting credentials, if you want the live version:**
 1. Go to the Mappls API Console (`outpost.mappls.com/console`), sign up with your email, verify it, and create a new project. Approval for the free developer tier is basically instant — no business KYC, no card needed.
 2. Inside the project's Credentials tab you'll find either a `Client ID` + `Client Secret` pair (OAuth2) or a `REST API Key` (simpler, static). Either works — the code accepts whichever one you have.
