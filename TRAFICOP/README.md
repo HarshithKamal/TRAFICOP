@@ -1,10 +1,10 @@
-# TRAFICOP — AI Copilot for Bengaluru Traffic Operations
+# TRAFICOP - AI Copilot for Bengaluru Traffic Operations
 
 **Predict. Respond. Divert.**
 
-Built for **Flipkart Gridlock 2.0 — Round 2** | Theme: *Event-Driven Congestion (Planned & Unplanned)*
+Built for **Flipkart Gridlock 2.0 - Round 2** | Theme: *Event-Driven Congestion (Planned & Unplanned)*
 
-This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 real Bengaluru traffic incidents) and built it into a working Traffic Command Center — it predicts how long an incident will take to resolve, scores how much impact it'll have on the corridor, classifies its risk level, recommends how many officers/barricades/tow vehicles to send, suggests diversion routes around it, and explains every single prediction with SHAP so it's not a black box. Everything runs on an interactive map of Bengaluru.
+This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 real Bengaluru traffic incidents) and built it into a working Traffic Command Center - it predicts how long an incident will take to resolve, scores how much impact it'll have on the corridor, classifies its risk level, recommends how many officers/barricades/tow vehicles to send, suggests diversion routes around it, and explains every single prediction with SHAP so it's not a black box. Everything runs on an interactive map of Bengaluru.
 
 ---
 
@@ -12,8 +12,8 @@ This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 r
 
 | Folder | Contents |
 |---|---|
-| `notebook/` | `TRAFICOP_Training_Notebook.ipynb` — my full training pipeline, written to run top to bottom in Colab |
-| `app/` | The Streamlit dashboard (`app.py`) — **ships with an already-trained model**, so you don't have to touch the notebook to use it |
+| `notebook/` | `TRAFICOP_Training_Notebook.ipynb` - my full training pipeline, written to run top to bottom in Colab |
+| `app/` | The Streamlit dashboard (`app.py`) - **ships with an already-trained model**, so you don't have to touch the notebook to use it |
 | `app/data/` | `processed_events.csv` (cleaned + feature-engineered dataset) and `corridor_tri.csv` (per-corridor TRI table) |
 | `app/models/` | `resolution_time_model.json` (trained XGBoost model, also used to rebuild the SHAP explainer at runtime), `label_encoders.pkl`, `feature_metadata.json`, `historical_lookups.json` |
 | `app/utils/` | `core.py` (data/model loading, inference, recommendation logic) and `map_builder.py` (Folium map construction) |
@@ -23,11 +23,11 @@ This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 r
 
 ---
 
-## Quick start — run the dashboard locally (5 minutes)
+## Quick start - run the dashboard locally (5 minutes)
 
 Here's the exact sequence I use, no steps skipped.
 
-### Step 1 — Install Python dependencies
+### Step 1 - Install Python dependencies
 
 Open a terminal in the `app/` folder and run:
 
@@ -37,7 +37,7 @@ pip install -r requirements.txt
 
 This pulls in Streamlit, XGBoost, SHAP, Folium, and everything else the app needs. Takes 2-3 minutes depending on your connection.
 
-### Step 2 — Run the app
+### Step 2 - Run the app
 
 Still inside the `app/` folder:
 
@@ -47,9 +47,9 @@ python -m streamlit run app.py
 
 A browser tab opens automatically at `http://localhost:8501`. If it doesn't, just paste that URL into your browser manually.
 
-### Step 3 — Explore
+### Step 3 - Explore
 
-Use the sidebar to move between the 7 pages. I'd start with **Bengaluru Command Map** — that's the centerpiece of the whole thing.
+Use the sidebar to move between the 7 pages. I'd start with **Bengaluru Command Map** - that's the centerpiece of the whole thing.
 
 That's it. No API keys, no signups, no cloud accounts needed just to run it locally.
 
@@ -62,16 +62,16 @@ If you want to retrain the model, see exactly how I engineered the features, or 
 ### Why I mount Google Drive
 
 The notebook mounts Google Drive and creates a `TRAFICOP/` folder there. I did this because:
-- I only had to upload the ASTraM CSV **once** — it stays cached in Drive for every future run
+- I only had to upload the ASTraM CSV **once** - it stays cached in Drive for every future run
 - Trained models and processed data survive across Colab sessions (Colab wipes its local disk the moment the runtime disconnects, but Drive doesn't)
 - I could pick up exactly where I left off instead of re-running the whole pipeline every session
 
 ### What the notebook actually does, step by step
 
 1. **Mounts Drive**, creates `MyDrive/TRAFICOP/{data,models,outputs}`
-2. **Loads the ASTraM dataset** — cached after the first run
-3. **Cleans the data** — parses 6 datetime columns, coalesces 3 different "resolution end" timestamp columns (none of them was populated for most rows on its own — I explain this fully inside the notebook)
-4. **Engineers features** — time-of-day buckets, historical corridor×cause resolution medians, frequency features
+2. **Loads the ASTraM dataset** - cached after the first run
+3. **Cleans the data** - parses 6 datetime columns, coalesces 3 different "resolution end" timestamp columns (none of them was populated for most rows on its own - I explain this fully inside the notebook)
+4. **Engineers features** - time-of-day buckets, historical corridor×cause resolution medians, frequency features
 5. **Trains XGBoost** on a log-transformed resolution-time target, evaluated honestly against a naive baseline
 6. **Runs SHAP** for explainability
 7. **Computes the Impact Score** (0–100) using a weighted formula I reasoned through and documented
