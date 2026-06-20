@@ -1,0 +1,36 @@
+{
+  "cat_features": [
+    "event_type",
+    "event_cause",
+    "priority",
+    "corridor",
+    "zone",
+    "time_period",
+    "requires_road_closure"
+  ],
+  "num_features": [
+    "hour",
+    "dayofweek",
+    "is_weekend",
+    "month",
+    "corridor_freq",
+    "cause_freq",
+    "corridor_cause_hist_median"
+  ],
+  "feature_cols": [
+    "event_type_enc",
+    "event_cause_enc",
+    "priority_enc",
+    "corridor_enc",
+    "zone_enc",
+    "time_period_enc",
+    "requires_road_closure_enc",
+    "hour",
+    "dayofweek",
+    "is_weekend",
+    "month",
+    "corridor_freq",
+    "cause_freq",
+    "corridor_cause_hist_median"
+  ]
+}
