@@ -20,7 +20,7 @@ I've documented this README the same way I'd want it explained to me — step by
 | `app/models/` | `resolution_time_model.json` (trained XGBoost model, also used to rebuild the SHAP explainer at runtime), `label_encoders.pkl`, `feature_metadata.json`, `historical_lookups.json` |
 | `app/utils/` | `core.py` (data/model loading, inference, recommendation logic) and `map_builder.py` (Folium map construction) |
 | `app/pages_content/` | One file per dashboard page (7 pages) |
-| `docs/` | MapmyIndia integration guide, deployment guide, GitHub setup walkthrough |
+| `docs/` | MapmyIndia integration guide, deployment guide, |
 
 **You don't need to run the notebook to use the dashboard.** The trained model is already sitting in `app/models/`. I kept the notebook in the repo so anyone can see exactly how I built it, retrain it on fresh data, or extend it.
 
