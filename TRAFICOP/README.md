@@ -18,9 +18,8 @@ This is my submission for Gridlock 2.0. I took the ASTraM event dataset (8,173 r
 | `app/models/` | `resolution_time_model.json` (trained XGBoost model, also used to rebuild the SHAP explainer at runtime), `label_encoders.pkl`, `feature_metadata.json`, `historical_lookups.json` |
 | `app/utils/` | `core.py` (data/model loading, inference, recommendation logic) and `map_builder.py` (Folium map construction) |
 | `app/pages_content/` | One file per dashboard page (7 pages) |
-| `docs/` | MapmyIndia integration guide, deployment guide, |
 
-**You don't need to run the notebook to use the dashboard.** The trained model is already sitting in `app/models/`. I kept the notebook in the repo so anyone can see exactly how I built it, retrain it on fresh data, or extend it.
+**You don't need to run the notebook to use the dashboard.** The trained model is already sitting in `app/models/`. I kept the notebook in the repo so anyone (judges included) can see exactly how I built it, retrain it on fresh data, or extend it.
 
 ---
 
@@ -96,7 +95,7 @@ Every formula gets explained inline in the notebook's markdown cells — not jus
 | 4 | Risk Classification | `notebook` Step 12, `classify_risk()` in `app/utils/core.py` |
 | 5 | Traffic Resilience Index (TRI) | `notebook` Step 13, table in `app/data/corridor_tri.csv`, dashboard in `page_tri.py` |
 | 6 | Recommendation Engine | `notebook` Step 14, `recommend_resources()` in `app/utils/core.py` |
-| 7 | Diversion Engine | `notebook` Step 15, `get_diversion_routes()` in `app/utils/core.py` — see also `docs/MAPMYINDIA_INTEGRATION.md` for the live-routing-API version |
+| 7 | Diversion Engine | `notebook` Step 15, `get_diversion_routes()` in `app/utils/core.py` — live-routing version uses Mappls, see "Mappls integration" below |
 | 8 | SHAP Explainability | `notebook` Step 10, `app/pages_content/page_shap.py` |
 | 9 | Incident Simulator | `notebook` Step 17, `app/pages_content/page_simulator.py` |
 | 10 | Traffic Command Center Dashboard | `app/app.py` + all 7 pages |
@@ -118,7 +117,7 @@ I made this session-only on purpose — nothing gets written to disk or to the o
 
 ---
 
-## A note on data honesty 
+## A note on data honesty (read this before your demo)
 
 Three things I want to be able to explain confidently to judges, because I built this without hiding any of it:
 
@@ -147,14 +146,38 @@ TRAFICOP ships with a real Mappls client (`app/utils/mappls_client.py`) that:
 - Calls Mappls' live Distance/ETA API to rank diversion routes by real driving time in the Incident Simulator
 - **Falls back automatically and silently** to OpenStreetMap tiles and static corridor-based diversion logic if no credentials are set, or if a live API call fails for any reason (expired trial credits, network issue, etc.) — the app never crashes or shows a broken page because of this
 
-**No credentials needed to demo it today.** The app runs perfectly on the fallback path right out of the box. Once a Mappls developer account is approved:
+**No credentials needed to demo it today.** The app runs perfectly on the fallback path right out of the box.
 
-1. Grab your `Client ID` + `Client Secret` (or `REST API Key`) from the Mappls Console
-2. **Local testing:** copy `app/.streamlit/secrets.toml.example` to `app/.streamlit/secrets.toml`, fill in the values, restart the app
-3. **Streamlit Cloud:** paste the same key=value lines into your app's Settings → Secrets box (see `docs/DEPLOYMENT_GUIDE.md`)
-4. Reload the dashboard — the sidebar shows **"🟢 Mappls live map: Connected"** and the map/diversion engine switches over automatically. No code changes needed.
+**Getting credentials, if you want the live version:**
+1. Go to the Mappls API Console (`outpost.mappls.com/console`), sign up with your email, verify it, and create a new project. Approval for the free developer tier is basically instant — no business KYC, no card needed.
+2. Inside the project's Credentials tab you'll find either a `Client ID` + `Client Secret` pair (OAuth2) or a `REST API Key` (simpler, static). Either works — the code accepts whichever one you have.
+3. **Local testing:** copy `app/.streamlit/secrets.toml.example` to `app/.streamlit/secrets.toml`, fill in whichever credential set you got, restart the app.
+4. **Streamlit Cloud:** paste the same key=value lines into your app's Settings → Secrets box (TOML format, e.g. `MAPPLS_REST_KEY = "your_key_here"`).
+5. Reload the dashboard — the sidebar shows **"🟢 Mappls live map: Connected"** and the map/diversion engine switches over automatically. No code changes needed anywhere.
 
-Full account setup, API surface reference, and the underlying REST calls are documented in `docs/MAPMYINDIA_INTEGRATION.md`.
+If the sidebar instead shows a "configured but unreachable" warning, double-check the key was pasted without extra whitespace, and that your account's free credits haven't run out.
+
+The APIs that actually matter for TRAFICOP: the **Routing API** (the diversion engine's main call — primary + alternate routes between two points), and optionally the **Traffic API** if your plan includes a live overlay layer. Pricing and exact monthly free-tier limits change over time on Mappls' end, so I'd rather you check the console directly than trust a number I write here that could go stale.
+
+---
+
+## Deploying it
+
+I'm hosting this on **Streamlit Cloud** — it's purpose-built for exactly this kind of app and the GitHub-native deploy flow is the fastest way to go from "code on my laptop" to "URL I can hand judges."
+
+1. Go to **share.streamlit.io**, sign in with **Continue with GitHub**, and authorize it. Free tier, no card needed.
+2. Click **Create app** → **Deploy a public app from GitHub**.
+3. Fill in:
+   - **Repository:** your `traficop` repo
+   - **Branch:** `main`
+   - **Main file path:** `app/app.py` — this matters, since `app.py` lives inside the `app/` subfolder, not the repo root
+4. Under **Advanced settings**, set the Python version to 3.11 or 3.12 to match what I tested with.
+5. Click **Deploy**. It clones the repo, installs everything in `app/requirements.txt`, and launches — takes 2-5 minutes the first time, with a live build log to watch.
+6. You'll get a public URL like `https://your-app-name.streamlit.app` — that's what I submit and demo from.
+
+**Adding Mappls secrets after deploy:** open your app's dashboard on share.streamlit.io, click the **⋮** menu → **Settings → Secrets**, paste in your credentials (same TOML format as above), and save. Streamlit Cloud restarts the app automatically with the secrets injected — `app/utils/mappls_client.py` reads them via `st.secrets`, so there's nothing else to touch.
+
+**Before judging, I always do a quick pass on the live URL:** open all 7 sidebar pages and confirm none of them throw a red error box, then specifically test the Incident Simulator (run an analysis) and the Command Map (confirm it renders and markers are clickable) — those two are the most likely to surface a missed dependency. If anything throws `ModuleNotFoundError`, it means a package is missing from `app/requirements.txt`. If anything throws `FileNotFoundError` for a model or data file, it almost always means the Main file path wasn't set to `app/app.py`.
 
 ---
 
