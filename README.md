@@ -117,6 +117,21 @@ Every formula gets explained inline in the notebook's markdown cells — not jus
 
 ---
 
+### Diversion Engine
+
+TRAFICOP combines corridor intelligence with Mappls routing services to generate diversion recommendations.
+
+When an incident occurs:
+
+1. Candidate diversion corridors are identified based on the affected traffic corridor.
+2. The Mappls Distance Matrix API is used to estimate travel distance and ETA for each alternative route.
+3. Routes are ranked according to travel efficiency and operational suitability.
+4. The best diversion options are presented to traffic operators.
+
+This approach enables data-driven diversion planning rather than relying solely on static rule-based recommendations.
+
+---
+
 ## The Simulator actually feeds the rest of the dashboard, live
 
 Submitting an incident in the **Incident Simulator** doesn't just show a result on that page — it injects the incident into your current browser session, where it then shows up across:
