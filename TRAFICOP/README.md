@@ -180,8 +180,6 @@ TRAFICOP ships with a real Mappls client (`app/utils/mappls_client.py`) that:
 * Enhances the traffic command center experience with real Indian mapping infrastructure.
 * Falls back automatically and silently to OpenStreetMap if no Mappls key is configured or if a service is temporarily unavailable. The application never crashes because of map connectivity issues.
 
----
-
 ### Automatic Detection
 
 When a valid Mappls REST API Key is configured in:
@@ -201,8 +199,6 @@ The sidebar status changes to:
 indicating that the application is successfully using Mappls services.
 
 If no key is configured, the dashboard continues to operate normally using OpenStreetMap as a fallback.
-
----
 
 ### Benefits
 
